@@ -2,8 +2,9 @@ package fi.qvik.job.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +14,9 @@ import java.io.IOException;
 
 import fi.qvik.job.R;
 import fi.qvik.job.activity.data.JobModel;
+import fi.qvik.job.activity.main.JobAdapter;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -26,16 +29,44 @@ public class MainActivity extends AppCompatActivity {
 
     private final OkHttpClient client = new OkHttpClient();
 
-    private TextView helloText;
+    private RecyclerView recyclerView;
+    private JobAdapter adapter;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        helloText = (TextView) findViewById(R.id.main_hello_text);
+        realm = Realm.getDefaultInstance();
+
+        recyclerView = (RecyclerView) findViewById(R.id.main_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new JobAdapter();
+        recyclerView.setAdapter(adapter);
+
 
         fetchJobs();
+
+        updateContent();
+    }
+
+    private void updateContent() {
+        RealmResults<JobModel> jobs = realm.where(JobModel.class).findAll();
+        // note as we put these Realm objects into adapter we can not close the realm
+        // so activity should have a realm open for its lifecycle
+
+        adapter.clear();
+        for (JobModel job : jobs) {
+            adapter.add(job);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     private void fetchJobs() {
@@ -47,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                printText(e.getMessage());
+                Log.w(TAG, "Error loading JSON");
             }
 
             @Override
@@ -57,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject json = new JSONObject(response.body().string());
                     JSONArray jobs = json.optJSONArray("jobs");
 
-                    Realm realm = Realm.getDefaultInstance();
-                    realm.beginTransaction();
+                    Realm threadRealm = Realm.getDefaultInstance();
+                    threadRealm.beginTransaction();
 
                     for (int i = 0; i < jobs.length(); i++) {
                         JSONObject job = jobs.optJSONObject(i);
@@ -69,28 +100,24 @@ public class MainActivity extends AppCompatActivity {
                         j.setImage(job.optString("image"));
 
                         Log.d(TAG, "Job: " + j.getTitle() + " saved");
-                        realm.copyToRealmOrUpdate(j);
+                        threadRealm.copyToRealmOrUpdate(j);
                     }
 
-                    realm.commitTransaction();
-                    realm.close();
-
-                    printText(json.toString(2));
+                    threadRealm.commitTransaction();
+                    threadRealm.close();
                 } catch (JSONException e) {
-                    Log.w(TAG, "Error loading JSON", e);
+                    Log.e(TAG, "Error loading JSON", e);
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateContent();
+                    }
+                });
             }
         });
 
-    }
-
-    private void printText(final String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                helloText.setText(text);
-            }
-        });
     }
 
 }
