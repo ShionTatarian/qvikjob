@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="fi.qvik.job.MainActivity">
+    tools:context=".activity.MainActivity">
 
     <TextView
         android:id="@+id/main_hello_text"
