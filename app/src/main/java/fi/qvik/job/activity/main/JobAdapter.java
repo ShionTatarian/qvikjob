@@ -1,9 +1,12 @@
 package fi.qvik.job.activity.main;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,13 +34,21 @@ public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
 
     @Override
     public void onBindViewHolder(JobViewHolder holder, int position) {
-        JobModel job = list.get(position);
+        final JobModel job = list.get(position);
         holder.title.setText(job.getTitle());
         holder.description.setText(job.getDescription());
 
         Picasso.with(holder.image.getContext())
                 .load(job.getImage())
                 .into(holder.image);
+
+        holder.itemView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(job.getLink()));
+                v.getContext().startActivity(browserIntent);
+            }
+        });
     }
 
     @Override
