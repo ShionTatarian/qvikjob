@@ -1,24 +1,24 @@
 package fi.qvik.job.activity.main;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import fi.qvik.job.R;
-import fi.qvik.job.data.JobModel;
+import fi.qvik.job.activity.BaseActivity;
 import fi.qvik.job.activity.main.JobAdapter.JobViewHolder;
+import fi.qvik.job.data.JobModel;
+import fi.qvik.job.util.click.OnJobClick;
 
 /**
  * Created by Tommy on 23/02/16.
@@ -26,6 +26,11 @@ import fi.qvik.job.activity.main.JobAdapter.JobViewHolder;
 public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
 
     private final List<JobModel> list = new ArrayList<>();
+    private final WeakReference<BaseActivity> weakActivity;
+
+    public JobAdapter(BaseActivity act) {
+        weakActivity = new WeakReference<>(act);
+    }
 
     @Override
     public JobViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,13 +47,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
                 .load(job.getImage())
                 .into(holder.image);
 
-        holder.itemView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(job.getLink()));
-                v.getContext().startActivity(browserIntent);
-            }
-        });
+        holder.itemView.setOnClickListener(new OnJobClick(job.getTitle(), weakActivity.get(), holder.image));
     }
 
     @Override

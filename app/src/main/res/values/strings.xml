@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Qvik Job</string>
+
+    <string name="job_activity_title">Job</string>
+    <string name="job_activity_link">Link:</string>
+
 </resources>

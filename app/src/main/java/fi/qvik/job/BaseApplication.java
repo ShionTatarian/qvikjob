@@ -3,6 +3,7 @@ package fi.qvik.job;
 import android.app.Application;
 import android.util.Log;
 
+import fi.qvik.job.web.WebService;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -28,6 +29,8 @@ public class BaseApplication extends Application {
         Realm realm = Realm.getDefaultInstance();
         Log.d(TAG, "Realm initiated: " + realm.getVersion());
         realm.close();
+
+        WebService.init(this);
     }
 
 
