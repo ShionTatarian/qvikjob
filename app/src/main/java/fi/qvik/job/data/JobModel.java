@@ -1,4 +1,4 @@
-package fi.qvik.job.activity.data;
+package fi.qvik.job.data;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

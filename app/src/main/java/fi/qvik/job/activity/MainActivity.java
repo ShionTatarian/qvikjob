@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import fi.qvik.job.R;
-import fi.qvik.job.activity.data.JobModel;
+import fi.qvik.job.data.JobModel;
 import fi.qvik.job.activity.main.JobAdapter;
 import io.realm.Realm;
 import io.realm.RealmResults;

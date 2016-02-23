@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fi.qvik.job.R;
-import fi.qvik.job.activity.data.JobModel;
+import fi.qvik.job.data.JobModel;
 import fi.qvik.job.activity.main.JobAdapter.JobViewHolder;
 
 /**

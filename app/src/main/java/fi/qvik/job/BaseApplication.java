@@ -29,4 +29,7 @@ public class BaseApplication extends Application {
         Log.d(TAG, "Realm initiated: " + realm.getVersion());
         realm.close();
     }
+
+
+
 }
