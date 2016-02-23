@@ -8,6 +8,14 @@
     android:padding="16dp"
     >
 
+    <ImageView
+        android:id="@+id/job_row_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:src="@color/colorPrimaryDark"
+        android:layout_marginBottom="8dp"
+        />
+
     <TextView
         android:id="@+id/job_row_title"
         android:layout_width="match_parent"

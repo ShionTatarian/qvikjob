@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
         holder.title.setText(job.getTitle());
         holder.description.setText(job.getDescription());
 
+        Picasso.with(holder.image.getContext())
+                .load(job.getImage())
+                .into(holder.image);
     }
 
     @Override
@@ -49,14 +55,15 @@ public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
 
     protected static class JobViewHolder extends ViewHolder {
 
+        private ImageView image;
         private TextView title;
         private TextView description;
 
         public JobViewHolder(View v) {
             super(v);
+            image = (ImageView) v.findViewById(R.id.job_row_image);
             title = (TextView) v.findViewById(R.id.job_row_title);
             description = (TextView) v.findViewById(R.id.job_row_description);
-
         }
     }
 
