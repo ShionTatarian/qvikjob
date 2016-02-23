@@ -1,20 +1,25 @@
 package fi.qvik.job.activity;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
+import fi.qvik.job.BaseEvent;
 import fi.qvik.job.R;
-import fi.qvik.job.data.JobModel;
 import fi.qvik.job.activity.main.JobAdapter;
+import fi.qvik.job.data.JobModel;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.Call;
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private final OkHttpClient client = new OkHttpClient();
+    private final EventBus eventBus = EventBus.getDefault();
 
     private RecyclerView recyclerView;
     private JobAdapter adapter;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        eventBus.register(this);
 
         realm = Realm.getDefaultInstance();
 
@@ -44,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new JobAdapter();
         recyclerView.setAdapter(adapter);
-
 
         fetchJobs();
 
@@ -67,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         realm.close();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(Message msg) {
+        switch (BaseEvent.values()[msg.what]) {
+            case JOB_FETCH_SUCCESS:
+                updateContent();
+                break;
+        }
+
     }
 
     private void fetchJobs() {
@@ -109,12 +125,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "Error loading JSON", e);
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateContent();
-                    }
-                });
+                Message msg = Message.obtain();
+                msg.what = BaseEvent.JOB_FETCH_SUCCESS.ordinal();
+                eventBus.post(msg);
             }
         });
 
