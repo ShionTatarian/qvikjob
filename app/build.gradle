@@ -8,13 +8,41 @@ android {
         applicationId "fi.qvik.job"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 1000
+        versionName "1.0.0.0"
     }
+    signingConfigs {
+        debug {
+            storeFile file("../info/dev_key.jks")
+            storePassword "d7b305c61f54"
+            keyAlias "qvik"
+            keyPassword "b00a59f5a24c"
+        }
+        release {
+            storeFile file("../info/release_key.jks")
+            storePassword "e6cd6957ea36"
+            keyAlias "qvik"
+            keyPassword "95ccecda1ff9"
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix ".dev"
+            versionNameSuffix "a"
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        prod {
+            signingConfig signingConfigs.release
+        }
+        dev {
+            signingConfig signingConfigs.debug
         }
     }
 }
