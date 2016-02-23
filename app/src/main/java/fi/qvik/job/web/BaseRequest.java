@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -16,6 +18,8 @@ import okhttp3.Response;
  * Created by Tommy on 23/02/16.
  */
 public abstract class BaseRequest implements Callback {
+
+    protected final EventBus eventBus = EventBus.getDefault();
 
     public Request makeRequest(Context ctx) {
         Request.Builder builder = new Request.Builder();

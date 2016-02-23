@@ -1,9 +1,14 @@
 package fi.qvik.job.activity;
 
 import android.os.Bundle;
+import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
+import fi.qvik.job.BaseEvent;
 import fi.qvik.job.R;
 import fi.qvik.job.activity.main.JobAdapter;
 import fi.qvik.job.data.JobModel;
@@ -17,11 +22,13 @@ public class MainActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private JobAdapter adapter;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        eventBus.register(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -30,10 +37,35 @@ public class MainActivity extends BaseActivity {
         adapter = new JobAdapter(this);
         recyclerView.setAdapter(adapter);
 
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_recycler_swipe_refresh_layout);
+        refreshLayout.setOnRefreshListener(onRefreshListener);
 
         fetchJobs();
 
         updateContent();
+    }
+
+    private OnRefreshListener onRefreshListener = new OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            fetchJobs();
+        }
+    };
+
+    @Override
+    public void onEvent(Message msg) {
+        super.onEvent(msg);
+
+        switch (BaseEvent.values()[msg.what]) {
+            case JOB_FETCH_FAILED:
+                Toast.makeText(this, "Error fetching jobs", Toast.LENGTH_SHORT).show();
+                refreshLayout.setRefreshing(false);
+                break;
+            case JOB_FETCH_SUCCESS:
+                refreshLayout.setRefreshing(false);
+                updateContent();
+                break;
+        }
     }
 
     private void updateContent() {

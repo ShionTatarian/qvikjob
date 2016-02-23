@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,6 +20,7 @@
         android:id="@+id/job_row_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/job_row_image"
         android:layout_marginBottom="8dp"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -30,9 +31,21 @@
         android:id="@+id/job_row_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/job_row_title"
+        android:paddingBottom="@dimen/margin_normal"
         android:maxLines="3"
         android:ellipsize="end"
         tools:text="Description"
         />
 
-</LinearLayout>
+    <View
+        android:id="@+id/job_row_click_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@id/job_row_description"
+        android:clickable="true"
+        android:background="@drawable/transparent_button"
+        />
+
+</RelativeLayout>

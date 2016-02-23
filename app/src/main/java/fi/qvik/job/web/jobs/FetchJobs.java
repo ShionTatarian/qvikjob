@@ -1,6 +1,7 @@
 package fi.qvik.job.web.jobs;
 
 import android.content.Context;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import fi.qvik.job.BaseEvent;
 import fi.qvik.job.R;
 import fi.qvik.job.data.JobModel;
 import fi.qvik.job.web.BaseRequest;
@@ -33,6 +35,11 @@ public class FetchJobs extends BaseRequest {
     @Override
     protected void handleError(int statusCode, @Nullable Response response) {
         Log.e(TAG, "[" + statusCode + "]Error fetching jobs");
+
+        Message msg = Message.obtain();
+        msg.what = BaseEvent.JOB_FETCH_SUCCESS.ordinal();
+        msg.arg1 = statusCode;
+        eventBus.post(msg);
     }
 
     @Override
@@ -62,5 +69,10 @@ public class FetchJobs extends BaseRequest {
         } catch (IOException | JSONException e) {
             Log.e(TAG, "Error loading JSON", e);
         }
+
+        Message msg = Message.obtain();
+        msg.what = BaseEvent.JOB_FETCH_SUCCESS.ordinal();
+        msg.arg1 = statusCode;
+        eventBus.post(msg);
     }
 }

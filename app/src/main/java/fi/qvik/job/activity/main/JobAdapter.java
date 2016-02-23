@@ -47,7 +47,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
                 .load(job.getImage())
                 .into(holder.image);
 
-        holder.itemView.setOnClickListener(new OnJobClick(job.getTitle(), weakActivity.get(), holder.image));
+        holder.clickView.setOnClickListener(new OnJobClick(job.getTitle(), weakActivity.get(), holder.image));
     }
 
     @Override
@@ -68,12 +68,14 @@ public class JobAdapter extends RecyclerView.Adapter<JobViewHolder> {
         private ImageView image;
         private TextView title;
         private TextView description;
+        private View clickView;
 
         public JobViewHolder(View v) {
             super(v);
             image = (ImageView) v.findViewById(R.id.job_row_image);
             title = (TextView) v.findViewById(R.id.job_row_title);
             description = (TextView) v.findViewById(R.id.job_row_description);
+            clickView = v.findViewById(R.id.job_row_click_view);
         }
     }
 

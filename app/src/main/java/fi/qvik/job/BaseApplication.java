@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import fi.qvik.job.web.WebService;
+import fi.qvik.job.data.JobModel;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -27,12 +28,16 @@ public class BaseApplication extends Application {
         // Use the config
         Realm.setDefaultConfiguration(config);
         Realm realm = Realm.getDefaultInstance();
+
         Log.d(TAG, "Realm initiated: " + realm.getVersion());
+        // clear all JobModels so that we can better test update handling
+        realm.beginTransaction();
+        realm.clear(JobModel.class);
+        realm.commitTransaction();
+
         realm.close();
 
         WebService.init(this);
     }
-
-
 
 }
