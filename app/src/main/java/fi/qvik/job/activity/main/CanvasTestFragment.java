@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import fi.qvik.job.R;
 import fi.qvik.job.activity.BaseActivity;
+import fi.qvik.job.view.TestDataView;
 
 /**
  * Created by Tommy on 16/03/16.
@@ -15,9 +16,11 @@ public class CanvasTestFragment extends fi.qvik.job.fragment.BaseFragment {
 
     public static final String TEST_DATA_KEY = "testData";
 
-    @Override
-    protected void getLayoutReferences(ViewGroup layout) {
+    TestDataView testView;
 
+    @Override
+    protected void getLayoutReferences(ViewGroup v) {
+        testView = (TestDataView) v.findViewById(R.id.canvas_test_view);
     }
 
     @Override
@@ -27,6 +30,10 @@ public class CanvasTestFragment extends fi.qvik.job.fragment.BaseFragment {
 
     @Override
     protected void updateContent(@NonNull BaseActivity act, @Nullable Bundle data) {
+        if (data != null) {
+            testView.setData(data.getIntArray(TEST_DATA_KEY));
+        }
+
 
     }
 }

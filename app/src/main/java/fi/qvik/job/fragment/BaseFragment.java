@@ -45,7 +45,7 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroyView();
     }
 
-    protected abstract void getLayoutReferences(ViewGroup layout);
+    protected abstract void getLayoutReferences(ViewGroup v);
 
     @LayoutRes
     protected abstract int getFragmentLayoutResoure();

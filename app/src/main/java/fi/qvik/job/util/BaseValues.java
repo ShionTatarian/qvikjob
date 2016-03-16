@@ -5,6 +5,9 @@ package fi.qvik.job.util;
  */
 public class BaseValues {
 
+    public static final int TEST_MAX = 100;
+    public static final int TEST_COUNT = 30;
+
     public class IntentKey {
 
         public static final String JOB_TITLE = "intent_job_title";

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.Random;
 
 import fi.qvik.job.fragment.BaseFragment;
+import fi.qvik.job.util.BaseValues;
 
 /**
  * Created by Tommy on 16/03/16.
@@ -30,10 +31,10 @@ public class MainFragmentAdapter extends FragmentStatePagerAdapter {
                 f = new CanvasTestFragment();
                 Bundle b = new Bundle();
 
-                int[] array = new int[100];
+                int[] array = new int[BaseValues.TEST_COUNT];
                 Random r = new Random();
                 for (int i = 0; i < array.length; i++) {
-                    array[i] = r.nextInt(100);
+                    array[i] = r.nextInt(BaseValues.TEST_MAX);
                 }
                 b.putIntArray(CanvasTestFragment.TEST_DATA_KEY, array);
                 f.setArguments(b);
