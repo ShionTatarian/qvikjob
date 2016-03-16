@@ -80,4 +80,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onUpClick() {
         onBackPressed();
     }
+
+    public Realm getRealm() {
+        return realm;
+    }
 }
