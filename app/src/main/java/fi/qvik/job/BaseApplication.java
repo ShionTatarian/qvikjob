@@ -18,8 +18,9 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Realm.init(this);
 
-        RealmConfiguration config = new RealmConfiguration.Builder(this)
+        RealmConfiguration config = new RealmConfiguration.Builder()
                 .name("qvik_job_db.realm")
                 .schemaVersion(REALM_VERSION)
                 .deleteRealmIfMigrationNeeded()
@@ -31,7 +32,7 @@ public class BaseApplication extends Application {
 
         // clear all JobModels so that we can better test update handling
         realm.beginTransaction();
-        realm.clear(JobModel.class);
+        realm.delete(JobModel.class);
         realm.commitTransaction();
 
         realm.close();
