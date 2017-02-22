@@ -3,6 +3,6 @@
 
     <string name="app_name">Qvik Job</string>
 
-    <string name="api_jobs_json" translatable="false">http://qvik.fi/mobilesystems/jobs.json</string>
+    <string name="api_jobs_json" translatable="false">http://qvik.fi/mobilesystems/jobs2017.json</string>
 
 </resources>
